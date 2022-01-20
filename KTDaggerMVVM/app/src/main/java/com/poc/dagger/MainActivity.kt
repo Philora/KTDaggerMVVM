@@ -1,5 +1,6 @@
 package com.poc.dagger
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,12 +14,17 @@ private lateinit var rvAdapter: RecyclerViewAdapter
 private lateinit var mViewModelMain: MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
+    var mSearchValue : String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         initRecyclerView()
         initViewModel()
+        btn_Search.setOnClickListener {
+            mSearchValue = edt_Search.text.toString()
+            mViewModelMain.makeAPICall(mSearchValue!!)
+        }
 
     }
 
@@ -33,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         mViewModelMain = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         mViewModelMain.getLivaDataObserve().observe(this, object: Observer<RecyclerDataList>{
+            @SuppressLint("NotifyDataSetChanged")
             override fun onChanged(t: RecyclerDataList?) {
                 if(t!=null){
                     rvAdapter.setUpdatedData(t.items)
@@ -42,7 +49,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-        mViewModelMain.makeAPICall()
     }
 
 }

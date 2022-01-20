@@ -14,7 +14,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     @Inject
     lateinit var mService: RetroService
 
-    private lateinit var liveData: MutableLiveData<RecyclerDataList>
+    private var liveData: MutableLiveData<RecyclerDataList>
 
     init {
         // Here we has to init View Model
@@ -26,8 +26,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         return liveData
     }
 
-    fun makeAPICall() {
-        val call: Call<RecyclerDataList>? = mService.getDataListAPI("alt")
+    fun makeAPICall(search: String) {
+        val call: Call<RecyclerDataList>? = mService.getDataListAPI(search)
         call?.enqueue(object : Callback<RecyclerDataList> {
             override fun onFailure(call: Call<RecyclerDataList>, t: Throwable) {
                 liveData.postValue(null)
